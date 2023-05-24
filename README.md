@@ -1,5 +1,5 @@
 # OpenGL
-![Demo](demo.png)
+![Demo](img/demo.png)
 
 ## Quick Start
 ```console

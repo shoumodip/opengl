@@ -6,28 +6,28 @@
 #include <GL/glext.h>
 #include <GLFW/glfw3.h>
 
-GLuint new_shader(const char *path, GLenum type) {
+char *read_file(const char *path) {
   FILE *file = fopen(path, "r");
   if (!file) {
-    return 0;
+    return NULL;
   }
 
   if (fseek(file, 0, SEEK_END) == -1) {
     fclose(file);
-    return 0;
+    return NULL;
   }
 
   long size = ftell(file);
   if (size == -1) {
     fclose(file);
-    return 0;
+    return NULL;
   }
   rewind(file);
 
   char *data = malloc(size + 1);
   if (!data) {
     fclose(file);
-    return 0;
+    return NULL;
   }
   data[size] = '\0';
 
@@ -36,6 +36,16 @@ GLuint new_shader(const char *path, GLenum type) {
 
   if (read != size) {
     free(data);
+    return NULL;
+  }
+
+  return data;
+}
+
+GLuint new_shader(const char *path, GLenum type) {
+  char *data = read_file(path);
+  if (!data) {
+    fprintf(stderr, "error: could not read file '%s'\n", path);
     return 0;
   }
 
@@ -139,7 +149,7 @@ int main(void) {
   }
   glfwMakeContextCurrent(window);
 
-  GLuint program = new_program("main.vert", "main.frag");
+  GLuint program = new_program("src/main.vert", "src/main.frag");
   if (!program) {
     exit(1);
   }

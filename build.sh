@@ -1,2 +1,2 @@
 #!/bin/sh
-cc -o opengl main.c -lglfw -lGL
+cc -o opengl src/main.c -lglfw -lGL
